@@ -60,6 +60,17 @@ void AMonster_ShooterCharacter::Tick(float DeltaTime) {
 void AMonster_ShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMonster_ShooterCharacter::OnFire);
+	
+	PlayerInputComponent->BindAxis("MoveForward", this, &AMonster_ShooterCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AMonster_ShooterCharacter::MoveRight);
+
+	PlayerInputComponent->BindAxis("Turn", this, &AMonster_ShooterCharacter::TurnAtRate);
+	PlayerInputComponent->BindAxis("LookUp", this, &AMonster_ShooterCharacter::LookAtRate);
+
 }
 
 void AMonster_ShooterCharacter::OnFire() {
@@ -67,18 +78,22 @@ void AMonster_ShooterCharacter::OnFire() {
 }
 
 void AMonster_ShooterCharacter::MoveForward(float Value) {
-
+	if (Value != 0.0f) {
+		AddMovementInput(GetActorForwardVector(), Value);
+	}
 }
 
 void AMonster_ShooterCharacter::MoveRight(float Value) {
-
+	if (Value != 0.0f) {
+		AddMovementInput(GetActorRightVector(), Value);
+	}
 }
 
 void AMonster_ShooterCharacter::TurnAtRate(float Rate) {
-
+	AddControllerYawInput(Rate * TurnRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AMonster_ShooterCharacter::LookAtRate(float Rate) {
-
+	AddControllerPitchInput(Rate * LookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
