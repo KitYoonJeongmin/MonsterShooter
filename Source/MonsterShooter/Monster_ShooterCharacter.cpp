@@ -7,6 +7,12 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 
+#include "Projectile.h"
+#include "Animation/AnimInstance.h"
+#include "Kismet/GameplayStatics.h"
+
+#include "MonsterShooter_GameMode.h"
+
 // Sets default values
 AMonster_ShooterCharacter::AMonster_ShooterCharacter() {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -47,7 +53,15 @@ AMonster_ShooterCharacter::AMonster_ShooterCharacter() {
 void AMonster_ShooterCharacter::BeginPlay() {
 	Super::BeginPlay();
 
-	GunMesh->AttachToComponent(HandsMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("GripPoint"));
+	GunMesh->AttachToComponent(HandsMesh, 
+		FAttachmentTransformRules::SnapToTargetNotIncludingScale, 
+		TEXT("GripPoint"));
+
+	World = GetWorld();
+
+	AnimInstance = HandsMesh->GetAnimInstance();
+
+
 }
 
 // Called every frame
@@ -74,7 +88,33 @@ void AMonster_ShooterCharacter::SetupPlayerInputComponent(UInputComponent* Playe
 }
 
 void AMonster_ShooterCharacter::OnFire() {
+	if (World != NULL)
+	{
+		SpawnRotation = GetControlRotation();
 
+		SpawnLocation = ((MuzzleLocation != nullptr) ?
+			MuzzleLocation->GetComponentLocation() :
+			GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride =
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+		World->SpawnActor<AProjectile>(Projectile,
+			SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+		if (FireSound != NULL)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+
+		}
+		if (FireAnimation != NULL && AnimInstance != NULL)
+		{
+			AnimInstance->Montage_Play(FireAnimation, 1.0f);
+		}
+
+
+	}
 }
 
 void AMonster_ShooterCharacter::MoveForward(float Value) {

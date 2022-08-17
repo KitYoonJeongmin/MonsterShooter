@@ -56,4 +56,18 @@ protected:
 
 	void TurnAtRate(float Rate);
 	void LookAtRate(float Rate);
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class AProjectile> Projectile;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GamePlay)
+		class USoundBase* FireSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GamePlay)
+		class UAnimMontage* FireAnimation;
+
+	class UAnimInstance* AnimInstance;
+	class UWorld* World;
+
+	FRotator SpawnRotation;
+	FVector SpawnLocation;
 };
