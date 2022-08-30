@@ -2,6 +2,7 @@
 
 
 #include "Enemy.h"
+#include "Monster_ShooterCharacter.h"
 
 #include "Components/BoxComponent.h"
 #include "MonsterShooterCharacter.h"
@@ -83,7 +84,12 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent){
 }
 
 void AEnemy::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit){
-	
+	AMonster_ShooterCharacter* Char = Cast<AMonster_ShooterCharacter>(OtherActor);
+
+	if (Char)
+	{
+		Char->DealDamage(DamageValue);
+	}
 }
 
 void AEnemy::OnSensed(const TArray<AActor*>& UpdatedActors) {
@@ -127,6 +133,12 @@ void AEnemy::SetNewRotation(FVector TargetPosition, FVector CurrentPosition) {
 	SetActorRotation(EnemyRotation);
 }
 
-void AEnemy::DealDamage(float DamageAmount) {
+void AEnemy::DealDamage(float DamageAmount) 
+{
+	Health -= DamageAmount;
 
+	if (Health <= 0.0f)
+	{
+		Destroy();
+	}
 }
