@@ -4,8 +4,8 @@
 #include "Door.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
-#include"MonsterShooterCharacter.h"
-#include "MonsterShooterGameMode.h"
+#include "Monster_ShooterCharacter.h"
+#include "MonsterShooter_GameMode.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -38,16 +38,16 @@ void ADoor::Tick(float DeltaTime)
 
 void ADoor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
 {
-	AMonsterShooterCharacter* Char = Cast<AMonsterShooterCharacter>(OtherActor);
+	AMonster_ShooterCharacter* Char = Cast<AMonster_ShooterCharacter>(OtherActor);
 
 	if (Char)
 	{
-		AMonsterShooterGameMode* MyGameMode =
-			Cast<AMonsterShooterGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		AMonsterShooter_GameMode* MyGameMode =
+			Cast<AMonsterShooter_GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 
 		if (MyGameMode)
 		{
-			//MyGameMode->RestartGameplay(true);
+			MyGameMode->RestartGameplay(true);
 		}
 	}
 }

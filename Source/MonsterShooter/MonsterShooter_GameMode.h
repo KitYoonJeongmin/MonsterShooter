@@ -25,10 +25,17 @@ private:
 public:
     UPROPERTY(BlueprintReadOnly)
         int TimerCount = 300;
+    UPROPERTY(EditAnywhere, Category = Widget)
+        TSubclassOf<UUserWidget> winWidget;
+    UPROPERTY(EditAnywhere, Category = Widget)
+        TSubclassOf<UUserWidget> deadWidget;
+    UUserWidget* winWidgetInstance;
+    UUserWidget* deadWidgetInstance;
 
 private:
     FTimerHandle CountDownTimerHandle = FTimerHandle();
 
     void CountdownTimer();
+    void EndingWidget(bool won);
 
 };

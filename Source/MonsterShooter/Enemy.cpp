@@ -84,6 +84,7 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent){
 }
 
 void AEnemy::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit){
+	
 	AMonster_ShooterCharacter* Char = Cast<AMonster_ShooterCharacter>(OtherActor);
 
 	if (Char)

@@ -149,5 +149,5 @@ void AMonster_ShooterCharacter::DealDamage(float DamageAmount) {
 		}
 	}
 
-	Destroy();
+	//Destroy();
 }
