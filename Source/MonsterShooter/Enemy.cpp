@@ -3,9 +3,7 @@
 
 #include "Enemy.h"
 #include "Monster_ShooterCharacter.h"
-
 #include "Components/BoxComponent.h"
-#include "MonsterShooterCharacter.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 
@@ -98,29 +96,34 @@ void AEnemy::OnSensed(const TArray<AActor*>& UpdatedActors) {
 	{
 		FActorPerceptionBlueprintInfo Info;
 		AIPerComp->GetActorsPerception(UpdatedActors[i], Info);
-
-		if (Info.LastSensedStimuli[0].WasSuccessfullySensed())
+		AMonster_ShooterCharacter* Char = Cast<AMonster_ShooterCharacter>(UpdatedActors[i]);
+		if (Char != nullptr)
 		{
-			FVector dir = UpdatedActors[i]->GetActorLocation() - GetActorLocation();
-			dir.Z = 0.0f;
-
-			CurrentVelocity = dir.GetSafeNormal() * MovementSpeed;
-
-			SetNewRotation(UpdatedActors[i]->GetActorLocation(), GetActorLocation());
-		}
-		else
-		{
-			FVector dir = BaseLocation - GetActorLocation();
-			dir.Z = 0.0f;
-
-			if (dir.SizeSquared2D() > 1.0f)
+			if (Info.LastSensedStimuli[0].WasSuccessfullySensed())
 			{
-				CurrentVelocity = dir.GetSafeNormal() * MovementSpeed;
-				BackToBaseLocation = true;
+				FVector dir = UpdatedActors[i]->GetActorLocation() - GetActorLocation();
+				dir.Z = 0.0f;
 
-				SetNewRotation(BaseLocation, GetActorLocation());
+				CurrentVelocity = dir.GetSafeNormal() * MovementSpeed;
+
+				SetNewRotation(UpdatedActors[i]->GetActorLocation(), GetActorLocation());
+			}
+			else
+			{
+				FVector dir = BaseLocation - GetActorLocation();
+				dir.Z = 0.0f;
+
+				if (dir.SizeSquared2D() > 1.0f)
+				{
+					CurrentVelocity = dir.GetSafeNormal() * MovementSpeed;
+					BackToBaseLocation = true;
+
+					SetNewRotation(BaseLocation, GetActorLocation());
+				}
 			}
 		}
+			
+
 
 	}
 }
