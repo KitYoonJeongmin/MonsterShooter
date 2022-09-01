@@ -15,7 +15,21 @@ void AMonsterShooter_GameMode::BeginPlay() {
 }
 
 void AMonsterShooter_GameMode::RestartGameplay(bool Won) {
-    EndingWidget(Won);
+    UGameplayStatics::SetGamePaused(GetWorld(), true);
+    APlayerController* OurPlayerController = UGameplayStatics::GetPlayerController(this, 0);
+    OurPlayerController->bShowMouseCursor = true;
+    if (Won)
+    {
+        if (winWidgetInstance != nullptr)
+            winWidgetInstance->AddToViewport();
+
+    }
+    else
+    {
+        if (deadWidgetInstance != nullptr)
+            deadWidgetInstance->AddToViewport();
+    }
+    
     /*
     if (Won) {
 
@@ -41,18 +55,5 @@ void AMonsterShooter_GameMode::CountdownTimer() {
 
 void AMonsterShooter_GameMode::EndingWidget(bool won)
 {
-    UGameplayStatics::SetGamePaused(GetWorld(), true);
-    if (won)
-    {
-        if (winWidgetInstance != nullptr)
-            winWidgetInstance->AddToViewport();
-        
-    }
-    else
-    {
-        if (deadWidgetInstance != nullptr)
-            deadWidgetInstance->AddToViewport();
-    }
-    APlayerController* OurPlayerController = UGameplayStatics::GetPlayerController(this, 0);
-    OurPlayerController->bShowMouseCursor = true;
+    
 }
